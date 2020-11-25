@@ -3,24 +3,31 @@
 * 1 Obter o número de telefone de usuário a partir de seu Id
 * 2 Obter o endereço do usuário pelo Id
 * */
+const util = require('util');
+
+const getAdressAsync = util.promisify(getAdress)
 
 function getUser() {
-	return new Promise(((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		setTimeout(() => {
 			return resolve({
 				id: 1,
 				name: 'Aladin',
 				birthday: new Date()
-			})}, 1000)
-	}))
+			})
+		}, 1000)
+	})
+}
 
-function getFone (userId, callback) {
-	setTimeout(() => {
-		return callback(null, {
-			fone: '00000000000',
-			code: '00'
-		})
-	}, 2000)
+function getFone (userId) {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			return resolve({
+				fone: '00000000000',
+				code: '00'
+			})
+		}, 2000)
+	})
 }
 
 function getAdress(userId, callback) {
@@ -30,9 +37,27 @@ function getAdress(userId, callback) {
 	}), 2000)
 }
 
- const user = getUser()
-	 .then(user => console.log('usuário', user))
-	 .catch(err => console.error('Deu ruim', err));
+ const userPromise = getUser()
+	 .then(user => getFone(user.id)
+		 .then(fone => {
+		 	return {
+		 		user,
+				fone
+			}
+		 }))
+	 .then(result => getAdressAsync(result.user.id)
+		 .then(adress => {
+		 	return {
+		 		user: result.user,
+				fone: result.fone,
+				adress
+			}
+		 }))
+	 .then(result => console.log(`
+	 Nome: ${result.user.name}
+	 Endereço: ${result.adress.stret}, ${result.adress.number}
+	 fone: (${result.fone.code}) ${result.fone.fone}`))
+	 .catch(err => console.error('Deu ruim', err))
 
 // getUser(function userResolve(error, user) {
 // 	if (error) return console.error('Deu ruim', error);

@@ -37,27 +37,42 @@ function getAdress(userId, callback) {
 	}), 2000)
 }
 
- const userPromise = getUser()
-	 .then(user => getFone(user.id)
-		 .then(fone => {
-		 	return {
-		 		user,
-				fone
-			}
-		 }))
-	 .then(result => getAdressAsync(result.user.id)
-		 .then(adress => {
-		 	return {
-		 		user: result.user,
-				fone: result.fone,
-				adress
-			}
-		 }))
-	 .then(result => console.log(`
-	 Nome: ${result.user.name}
-	 Endereço: ${result.adress.stret}, ${result.adress.number}
-	 fone: (${result.fone.code}) ${result.fone.fone}`))
-	 .catch(err => console.error('Deu ruim', err))
+async function main() {
+	try {
+		const user = await getUser();
+		const fone = await getFone(user.id);
+		const adress = await getAdressAsync(user.id);
+
+		console.log(`
+	 	Nome: ${user.name}
+	  Endereço: ${adress.stret}, ${adress.number}
+	  fone: (${fone.code}) ${fone.fone}`);
+	} catch error {
+		console.error('DEU RUIM!!', error);
+	}
+}
+
+ // const userPromise = getUser()
+	//  .then(user => getFone(user.id)
+	// 	 .then(fone => {
+	// 	 	return {
+	// 	 		user,
+	// 			fone
+	// 		}
+	// 	 }))
+	//  .then(result => getAdressAsync(result.user.id)
+	// 	 .then(adress => {
+	// 	 	return {
+	// 	 		user: result.user,
+	// 			fone: result.fone,
+	// 			adress
+	// 		}
+	// 	 }))
+	//  .then(result => console.log(`
+	//  Nome: ${result.user.name}
+	//  Endereço: ${result.adress.stret}, ${result.adress.number}
+	//  fone: (${result.fone.code}) ${result.fone.fone}`))
+	//  .catch(err => console.error('Deu ruim', err))
 
 // getUser(function userResolve(error, user) {
 // 	if (error) return console.error('Deu ruim', error);

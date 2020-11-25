@@ -1,0 +1,16 @@
+#Idea's
+\.idea
+\.vscode
+
+#Files
+.DS_Store
+.env
+
+#Foldes
+dist
+build
+**/dbase
+
+#Modulesgit
+node_modules
+vendor

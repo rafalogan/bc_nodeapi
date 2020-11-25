@@ -4,14 +4,15 @@
 * 2 Obter o endereço do usuário pelo Id
 * */
 
-function getUser(callback) {
-	setTimeout(() => {
-		return callback (null, {
-			id: 1,
-			name: 'Aladin',
-			birthday: new Date()
-		})}, 1000)
-}
+function getUser() {
+	return new Promise(((resolve, reject) => {
+		setTimeout(() => {
+			return resolve({
+				id: 1,
+				name: 'Aladin',
+				birthday: new Date()
+			})}, 1000)
+	}))
 
 function getFone (userId, callback) {
 	setTimeout(() => {
@@ -29,22 +30,21 @@ function getAdress(userId, callback) {
 	}), 2000)
 }
 
+ const user = getUser()
+	 .then(user => console.log('usuário', user))
+	 .catch(err => console.error('Deu ruim', err));
 
-
-
-
-
-getUser(function userResolve(error, user) {
-	if (error) return console.error('Deu ruim', error);
-	getFone(user.id, function foneResolve(error, fone) {
-		if (error) return console.error('Deu ruim no telefone', error);
-		getAdress(user.id, function adressResolve(err, adress) {
-			if(err) return  console.error('Deu ruim no endereço', adress);
-
-			console.log(`
-			Nome: ${user.name}
-			Endereco: ${adress.stret}, ${adress.number}
-			telefone: (${fone.code}) ${fone.fone}`)
-		})
-	});
-});
+// getUser(function userResolve(error, user) {
+// 	if (error) return console.error('Deu ruim', error);
+// 	getFone(user.id, function foneResolve(error, fone) {
+// 		if (error) return console.error('Deu ruim no telefone', error);
+// 		getAdress(user.id, function adressResolve(err, adress) {
+// 			if(err) return  console.error('Deu ruim no endereço', adress);
+//
+// 			console.log(`
+// 			Nome: ${user.name}
+// 			Endereco: ${adress.stret}, ${adress.number}
+// 			telefone: (${fone.code}) ${fone.fone}`)
+// 		})
+// 	});
+// });

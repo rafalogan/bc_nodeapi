@@ -37,17 +37,24 @@ function getAdress(userId, callback) {
 	}), 2000)
 }
 
+main();
 async function main() {
 	try {
+		console.time('timePromise');
 		const user = await getUser();
-		const fone = await getFone(user.id);
-		const adress = await getAdressAsync(user.id);
+		// const fone = await getFone(user.id);
+		// const adress = await getAdressAsync(user.id);
 
+		const result = await Promise.all([getFone(user.id), getAdressAsync(user.id)])
+		const fone = result[0];
+		const adress = result[0];
 		console.log(`
 	 	Nome: ${user.name}
 	  Endereço: ${adress.stret}, ${adress.number}
 	  fone: (${fone.code}) ${fone.fone}`);
-	} catch error {
+
+		console.timeEnd('timePromise');
+	} catch (error) {
 		console.error('DEU RUIM!!', error);
 	}
 }
